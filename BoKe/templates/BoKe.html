@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>博客评论界面展示</title>
+</head>
+<body>
+    <form class="Takes-form" id="jsForm">
+        <div class="form-group">
+            <label class="name">昵称：</label>
+            <input name="name" type="text" class="form-name" id="js-name" placeholder="不超过20个字">
+        </div>
+        <div class="from-group">
+            <label class="comment">评论区：</label>
+            <textarea name="content" class="from-control" id="js-content" rows="5" placeholder="字数不能超过200"></textarea>
+        </div>
+        <button class="btn" type="button" id="jsBtn" value="提交评论">提交评论</button>
+    </form>
+    {% block Takes-form %}
+        <script>
+            $(function(){
+                $('jsBtn').on('click',function(){
+                    $ajax({
+                        cache:false,
+                        type:"POST",
+                        url:"add_content",
+                        data:$('#jsForm').serialize(),
+                        dateType:"json",
+                        async:true,
+                        beforeSend:function(xhr,setting){
+                            xhr.setRequestHeader("x-csrfToken","{{ csrf_token }}");
+                        },
+                        success:function(data){
+                            if(data.status == 'success'){
+                                alert("提交成功！！！")
+                                window.location.reload();
+                            }else if(data.staus =='fail'){
+                                alert("提交失败！！！请重新提交");
+                            }
+                        },
+                    });
+                });
+            })
+        </script>
+    {% endblock %}
+
+</body>
+</html>
